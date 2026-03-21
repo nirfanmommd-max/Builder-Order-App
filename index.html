@@ -12,157 +12,62 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:      #0e0e0e;
-  --surface: #161616;
-  --surf2:   #1f1f1f;
-  --surf3:   #252525;
-  --border:  #2a2a2a;
-  --bord2:   #333;
-  --amber:   #f59e0b;
-  --amber2:  #fbbf24;
-  --green:   #22c55e;
-  --red:     #ef4444;
-  --text:    #f0f0f0;
-  --muted:   #888;
-  --muted2:  #555;
+  --bg:      #0e0e0e; --surface: #161616; --surf2: #1f1f1f; --surf3: #252525;
+  --border:  #2a2a2a; --bord2: #333; --amber: #f59e0b; --amber2: #fbbf24;
+  --green:   #22c55e; --red: #ef4444; --text: #f0f0f0; --muted: #888; --muted2: #555;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* ══════════════════════════════
-   PIN LOCK SCREEN
-══════════════════════════════ */
-#pin-screen {
-  position: fixed; inset: 0; background: var(--bg);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 9999; padding: 24px;
-}
-.pin-logo {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.1rem; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--amber); margin-bottom: 4px; text-align: center;
-}
-.pin-company {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.8rem; font-weight: 800; color: var(--text);
-  text-align: center; margin-bottom: 6px; line-height: 1.2;
-}
-.pin-sub {
-  font-size: 0.8rem; color: var(--muted); margin-bottom: 36px; text-align: center;
-}
-.pin-dots {
-  display: flex; gap: 16px; margin-bottom: 32px;
-}
-.pin-dot {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid var(--bord2); background: transparent;
-  transition: all 0.2s;
-}
-.pin-dot.filled { background: var(--amber); border-color: var(--amber); }
-.pin-dot.error  { background: var(--red);   border-color: var(--red); animation: shake 0.4s ease; }
-
-@keyframes shake {
-  0%,100%{transform:translateX(0)}
-  20%{transform:translateX(-8px)}
-  40%{transform:translateX(8px)}
-  60%{transform:translateX(-6px)}
-  80%{transform:translateX(6px)}
-}
-
-.pin-grid {
-  display: grid; grid-template-columns: repeat(3, 72px);
-  gap: 12px; margin-bottom: 16px;
-}
-.pin-key {
-  width: 72px; height: 72px; border-radius: 50%;
-  background: var(--surf2); border: 1px solid var(--bord2);
-  color: var(--text); font-size: 1.5rem; font-weight: 600;
-  cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  user-select: none;
-}
-.pin-key:hover  { background: var(--surf3); border-color: var(--muted2); }
-.pin-key:active { background: var(--amber); color: #000; border-color: var(--amber); transform: scale(0.95); }
-.pin-key.del    { font-size: 1.2rem; color: var(--muted); }
-.pin-key.empty  { visibility: hidden; }
-.pin-hint { font-size: 0.75rem; color: var(--muted2); text-align: center; }
-
-/* ══════════════════════════════
-   MAIN APP
-══════════════════════════════ */
-#app { display: none; }
-#app.unlocked { display: block; }
-
 .topbar {
   background: var(--surface); border-bottom: 2px solid var(--amber);
   padding: 0 20px; display: flex; align-items: center; justify-content: space-between;
-  height: 56px; position: sticky; top: 0; z-index: 200;
+  height: 60px; position: sticky; top: 0; z-index: 200;
 }
-.logo-wrap { display: flex; flex-direction: column; }
-.logo-main { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--text); line-height: 1.1; }
+.logo-wrap { display: flex; flex-direction: column; justify-content: center; }
+.logo-main { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; line-height: 1.2; }
 .logo-main span { color: var(--amber); }
-.logo-sub  { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
-.topbar-right { display: flex; align-items: center; gap: 12px; }
+.logo-sub  { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; margin-top: 1px; }
 #clock { font-size: 0.78rem; color: var(--amber); font-weight: 600; }
-.lock-btn {
-  background: transparent; border: 1px solid var(--bord2); color: var(--muted);
-  border-radius: 7px; padding: 4px 10px; font-size: 0.72rem; cursor: pointer;
-  font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; text-transform: uppercase;
-}
-.lock-btn:hover { border-color: var(--red); color: var(--red); }
 
-/* ── NAV TABS ── */
-.nav-tabs {
-  display: flex; background: var(--surface); border-bottom: 1px solid var(--border);
-  position: sticky; top: 56px; z-index: 100;
-}
-.nav-tab {
-  flex: 1; padding: 12px; text-align: center;
-  font-family: 'Barlow Condensed', sans-serif; font-size: 0.88rem; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
-  cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s;
-}
+.nav-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 60px; z-index: 100; }
+.nav-tab { flex: 1; padding: 12px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 0.88rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
 .nav-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
 
 .page { display: none; padding: 16px; max-width: 720px; margin: 0 auto; }
 .page.active { display: block; }
 
-/* ── INPUT CARD ── */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
 .card-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 .hint-bar { background: var(--surf2); border: 1px solid var(--bord2); border-left: 3px solid var(--amber); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.8; }
 .hint-bar code { background: rgba(245,158,11,0.12); color: var(--amber); padding: 1px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
 
-.input-row { display: flex; gap: 10px; margin-bottom: 10px; }
 .at-wrap { position: relative; flex: 1; }
 .at-sign { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; font-weight: 800; color: var(--amber); font-family: 'Barlow Condensed', sans-serif; pointer-events: none; }
+.input-row { display: flex; gap: 10px; margin-bottom: 10px; }
 #entry-input { width: 100%; background: var(--surf2); border: 2px solid var(--bord2); border-radius: 10px; padding: 13px 13px 13px 34px; color: var(--text); font-size: 1rem; font-family: 'Courier New', monospace; outline: none; transition: border-color 0.2s; }
 #entry-input:focus   { border-color: var(--amber); }
 #entry-input.valid   { border-color: var(--green); }
 #entry-input.invalid { border-color: var(--red); }
 #entry-input::placeholder { color: var(--muted2); }
-
-.add-btn { width: 100%; background: var(--amber); color: #000; border: none; border-radius: 10px; padding: 13px; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
+.add-btn { background: var(--amber); color: #000; border: none; border-radius: 10px; padding: 13px 20px; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
 .add-btn:hover { background: var(--amber2); }
 
 .preview-bar { min-height: 30px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; padding: 8px 0; font-size: 0.82rem; }
 .pill { padding: 3px 10px; border-radius: 20px; font-size: 0.76rem; font-weight: 700; }
-.pill-name { background: rgba(59,130,246,0.18);  color: #93c5fd; }
-.pill-item { background: rgba(34,197,94,0.15);   color: #86efac; }
-.pill-qty  { background: rgba(245,158,11,0.15);  color: #fcd34d; }
-.pill-ok   { background: rgba(34,197,94,0.15);   color: #86efac; }
-.pill-err  { background: rgba(239,68,68,0.15);   color: #fca5a5; }
+.pill-name { background: rgba(59,130,246,0.18); color: #93c5fd; }
+.pill-item { background: rgba(34,197,94,0.15);  color: #86efac; }
+.pill-qty  { background: rgba(245,158,11,0.15); color: #fcd34d; }
+.pill-ok   { background: rgba(34,197,94,0.15);  color: #86efac; }
+.pill-err  { background: rgba(239,68,68,0.15);  color: #fca5a5; }
 .arr { color: var(--muted2); }
 
-/* ── QUICK LIST ── */
 .quick-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); }
 .quick-row:last-child { border-bottom: none; }
-.q-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: var(--amber); font-size: 1rem; }
-.q-meta { font-size: 0.75rem; color: var(--muted); margin-left: 8px; }
+.q-name  { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: var(--amber); font-size: 1rem; }
+.q-meta  { font-size: 0.75rem; color: var(--muted); margin-left: 8px; }
 .q-total { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; color: var(--green); font-size: 1.1rem; }
 
-/* ── LOG ── */
 .log-item { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 9px 12px; border-radius: 8px; background: var(--surf2); margin-bottom: 6px; border-left: 3px solid var(--amber); animation: fadeIn 0.25s ease; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:translateY(0)} }
 .log-time { font-size: 0.7rem; color: var(--muted); }
@@ -171,7 +76,6 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 .log-qty  { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: var(--green); background: rgba(34,197,94,0.1); padding: 2px 8px; border-radius: 6px; }
 .empty-msg { text-align: center; color: var(--muted2); padding: 32px 16px; font-size: 0.88rem; }
 
-/* ── SEARCH ── */
 .search-wrap { position: relative; margin-bottom: 14px; }
 .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
 #search-input { width: 100%; background: var(--surface); border: 2px solid var(--bord2); border-radius: 12px; padding: 13px 13px 13px 40px; color: var(--text); font-size: 1rem; outline: none; transition: border-color 0.2s; }
@@ -192,12 +96,11 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 .customer-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; transition: border-color 0.15s; }
 .customer-card:hover { border-color: var(--amber); }
 .customer-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; }
-.customer-name { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--amber); }
-.customer-meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.customer-name  { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--amber); }
+.customer-meta  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
 .customer-total { font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--green); }
 .customer-detail { display: none; border-top: 1px solid var(--border); }
 .customer-detail.open { display: block; }
-
 .detail-table { width: 100%; border-collapse: collapse; }
 .detail-table th { padding: 8px 16px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); border-bottom: 1px solid var(--border); text-align: left; }
 .detail-table td { padding: 9px 16px; border-bottom: 1px solid var(--surf2); font-size: 0.85rem; }
@@ -211,10 +114,9 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 .dact-btn:hover { background: var(--bord2); color: var(--text); }
 .dact-btn.del { border-color: #7f1d1d; color: #fca5a5; }
 .dact-btn.del:hover { background: #7f1d1d; color: white; }
-
 .hl { background: rgba(245,158,11,0.25); border-radius: 3px; padding: 0 2px; }
 
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface); border: 1px solid var(--bord2); border-radius: 10px; padding: 11px 20px; font-size: 0.86rem; font-weight: 600; z-index: 9998; transition: transform 0.3s, opacity 0.3s; opacity: 0; white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface); border: 1px solid var(--bord2); border-radius: 10px; padding: 11px 20px; font-size: 0.86rem; font-weight: 600; z-index: 999; transition: transform 0.3s, opacity 0.3s; opacity: 0; white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 .toast.ok  { border-color: var(--green); color: var(--green); }
 .toast.err { border-color: var(--red);   color: var(--red); }
@@ -222,204 +124,84 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 </head>
 <body>
 
-<!-- ════════════════════════════
-     PIN LOCK SCREEN
-════════════════════════════ -->
-<div id="pin-screen">
-  <div class="pin-logo">🏗️ Order Management System</div>
-  <div class="pin-company">Padippura Builders<br>&amp; Developers</div>
-  <div class="pin-sub">Enter PIN to continue</div>
-
-  <div class="pin-dots" id="pin-dots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
+<div class="topbar">
+  <div class="logo-wrap">
+    <div class="logo-main">🏗️ <span>Padippura</span> Builders</div>
+    <div class="logo-sub">&amp; Developers — Order Entry</div>
   </div>
-
-  <div class="pin-grid">
-    <div class="pin-key" onclick="pinPress('1')">1</div>
-    <div class="pin-key" onclick="pinPress('2')">2</div>
-    <div class="pin-key" onclick="pinPress('3')">3</div>
-    <div class="pin-key" onclick="pinPress('4')">4</div>
-    <div class="pin-key" onclick="pinPress('5')">5</div>
-    <div class="pin-key" onclick="pinPress('6')">6</div>
-    <div class="pin-key" onclick="pinPress('7')">7</div>
-    <div class="pin-key" onclick="pinPress('8')">8</div>
-    <div class="pin-key" onclick="pinPress('9')">9</div>
-    <div class="pin-key empty"></div>
-    <div class="pin-key" onclick="pinPress('0')">0</div>
-    <div class="pin-key del" onclick="pinDel()">⌫</div>
-  </div>
-  <div class="pin-hint">Contact admin if you forgot your PIN</div>
+  <span id="clock"></span>
 </div>
 
-<!-- ════════════════════════════
-     MAIN APP
-════════════════════════════ -->
-<div id="app">
-  <div class="topbar">
-    <div class="logo-wrap">
-      <div class="logo-main">🏗️ <span>Padippura</span> Builders</div>
-      <div class="logo-sub">& Developers — Order Entry</div>
-    </div>
-    <div class="topbar-right">
-      <span id="clock"></span>
-      <button class="lock-btn" onclick="lockApp()">🔒 Lock</button>
-    </div>
-  </div>
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showPage('entry')">➕ Add Entry</div>
+  <div class="nav-tab" onclick="showPage('search')">🔍 Search</div>
+  <div class="nav-tab" onclick="showPage('log')">📋 Log</div>
+</div>
 
-  <div class="nav-tabs">
-    <div class="nav-tab active" onclick="showPage('entry')">➕ Add Entry</div>
-    <div class="nav-tab" onclick="showPage('search')">🔍 Search</div>
-    <div class="nav-tab" onclick="showPage('log')">📋 Log</div>
-  </div>
-
-  <!-- ENTRY PAGE -->
-  <div class="page active" id="page-entry">
-    <div class="card">
-      <div class="hint-bar">
-        Format: <code>@Name item quantity</code> &nbsp;·&nbsp;
-        Example: <code>@Irfan cement 1000</code> &nbsp; <code>@Hari masons 3</code>
+<!-- ENTRY PAGE -->
+<div class="page active" id="page-entry">
+  <div class="card">
+    <div class="hint-bar">
+      Format: <code>@Name item quantity</code> &nbsp;·&nbsp;
+      Example: <code>@Irfan cement 1000</code> &nbsp; <code>@Hari masons 3</code>
+    </div>
+    <div class="input-row">
+      <div class="at-wrap">
+        <span class="at-sign">@</span>
+        <input type="text" id="entry-input" placeholder="Irfan cement 1000" autocomplete="off" spellcheck="false" />
       </div>
-      <div class="input-row">
-        <div class="at-wrap">
-          <span class="at-sign">@</span>
-          <input type="text" id="entry-input" placeholder="Irfan cement 1000" autocomplete="off" spellcheck="false" />
-        </div>
-        <button class="add-btn" onclick="addEntry()">ADD ➜</button>
-      </div>
-      <div class="preview-bar" id="preview-bar">
-        <span style="color:var(--muted2)">Start typing to see preview...</span>
-      </div>
+      <button class="add-btn" onclick="addEntry()">ADD ➜</button>
     </div>
-    <div class="card">
-      <div class="card-label">All Customers</div>
-      <div id="quick-list"><div class="empty-msg">No entries yet</div></div>
+    <div class="preview-bar" id="preview-bar">
+      <span style="color:var(--muted2)">Start typing to see preview...</span>
     </div>
   </div>
+  <div class="card">
+    <div class="card-label">All Customers</div>
+    <div id="quick-list"><div class="empty-msg">No entries yet</div></div>
+  </div>
+</div>
 
-  <!-- SEARCH PAGE -->
-  <div class="page" id="page-search">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="search-input" placeholder="Search customer name..." oninput="renderSearch()" autocomplete="off" />
-    </div>
-    <div class="stats-strip">
-      <div class="stat-box"><div class="sl">Customers</div><div class="sv" id="st-cust">0</div></div>
-      <div class="stat-box"><div class="sl">Entries</div><div class="sv" id="st-entries">0</div></div>
-      <div class="stat-box"><div class="sl">Today</div><div class="sv" id="st-today">0</div></div>
-    </div>
-    <div class="export-bar">
-      <button class="xbtn" onclick="exportAll()">📄 Export All CSV</button>
-      <button class="xbtn" onclick="printSummary()">🖨 Print Summary</button>
-      <button class="xbtn red" onclick="resetAll()">🗑 Reset All</button>
-    </div>
-    <div id="search-results"></div>
+<!-- SEARCH PAGE -->
+<div class="page" id="page-search">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search customer name..." oninput="renderSearch()" autocomplete="off" />
   </div>
+  <div class="stats-strip">
+    <div class="stat-box"><div class="sl">Customers</div><div class="sv" id="st-cust">0</div></div>
+    <div class="stat-box"><div class="sl">Entries</div><div class="sv" id="st-entries">0</div></div>
+    <div class="stat-box"><div class="sl">Today</div><div class="sv" id="st-today">0</div></div>
+  </div>
+  <div class="export-bar">
+    <button class="xbtn" onclick="exportAll()">📄 Export All CSV</button>
+    <button class="xbtn" onclick="printSummary()">🖨 Print Summary</button>
+    <button class="xbtn red" onclick="resetAll()">🗑 Reset All</button>
+  </div>
+  <div id="search-results"></div>
+</div>
 
-  <!-- LOG PAGE -->
-  <div class="page" id="page-log">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Today's Entry Log</span>
-      <button onclick="clearLog()" style="background:transparent;border:1px solid var(--bord2);color:var(--muted);border-radius:5px;padding:3px 10px;font-size:0.72rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;">Clear</button>
-    </div>
-    <div id="log-list"><div class="empty-msg">No entries yet</div></div>
+<!-- LOG PAGE -->
+<div class="page" id="page-log">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Today's Entry Log</span>
+    <button onclick="clearLog()" style="background:transparent;border:1px solid var(--bord2);color:var(--muted);border-radius:5px;padding:3px 10px;font-size:0.72rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;">Clear</button>
   </div>
+  <div id="log-list"><div class="empty-msg">No entries yet</div></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════
-//  PIN LOCK
-// ══════════════════════════════
-var CORRECT_PIN = '0000';
-var pinEntered  = '';
-var pinLocked   = true;
-
-// Check if already unlocked this session
-if (sessionStorage.getItem('unlocked') === 'yes') {
-  unlockApp();
-}
-
-function pinPress(digit) {
-  if (pinEntered.length >= 4) return;
-  pinEntered += digit;
-  updateDots();
-  if (pinEntered.length === 4) {
-    setTimeout(checkPin, 150);
-  }
-}
-
-function pinDel() {
-  pinEntered = pinEntered.slice(0, -1);
-  updateDots();
-}
-
-function updateDots() {
-  for (var i = 0; i < 4; i++) {
-    var dot = document.getElementById('d'+i);
-    dot.className = 'pin-dot' + (i < pinEntered.length ? ' filled' : '');
-  }
-}
-
-function checkPin() {
-  if (pinEntered === CORRECT_PIN) {
-    unlockApp();
-  } else {
-    // Wrong PIN — shake and reset
-    for (var i = 0; i < 4; i++) {
-      document.getElementById('d'+i).className = 'pin-dot error';
-    }
-    setTimeout(function() {
-      pinEntered = '';
-      updateDots();
-    }, 700);
-  }
-}
-
-function unlockApp() {
-  var ps = document.getElementById('pin-screen');
-  if (ps && ps.parentNode) ps.parentNode.removeChild(ps);
-  document.getElementById('app').classList.add('unlocked');
-  sessionStorage.setItem('unlocked', 'yes');
-  pinLocked = false;
-  setTimeout(function(){ var i = document.getElementById('entry-input'); if(i) i.focus(); }, 300);
-}
-
-function lockApp() {
-  sessionStorage.removeItem('unlocked');
-  pinEntered = '';
-  // Reload page to show PIN screen again
-  window.location.reload();
-}
-
-// Also support keyboard PIN entry
-document.addEventListener('keydown', function(e) {
-  if (!pinLocked) return;
-  if (e.key >= '0' && e.key <= '9') pinPress(e.key);
-  if (e.key === 'Backspace') pinDel();
-});
-
-// ══════════════════════════════
-//  DATA
-// ══════════════════════════════
 var sheets = JSON.parse(localStorage.getItem('bSheets') || '{}');
 var log    = JSON.parse(localStorage.getItem('bLog')    || '[]');
 
-// ══════════════════════════════
-//  CLOCK
-// ══════════════════════════════
 function tick() {
   var el = document.getElementById('clock');
   if (el) el.textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 tick(); setInterval(tick, 1000);
 
-// ══════════════════════════════
-//  PAGE NAV
-// ══════════════════════════════
 function showPage(id) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
@@ -430,9 +212,6 @@ function showPage(id) {
   if (id==='log')    renderLog();
 }
 
-// ══════════════════════════════
-//  PARSE
-// ══════════════════════════════
 function parse(raw) {
   var clean = raw.trim().replace(/^@/,'');
   var m = clean.match(/^(\S+)\s+(\S+)\s+(\d+(?:\.\d+)?)$/);
@@ -440,9 +219,6 @@ function parse(raw) {
   return { name: m[1], item: m[2].toLowerCase(), qty: parseFloat(m[3]) };
 }
 
-// ══════════════════════════════
-//  LIVE PREVIEW
-// ══════════════════════════════
 var inp = document.getElementById('entry-input');
 inp.addEventListener('input', function() {
   var val = this.value.trim();
@@ -452,9 +228,9 @@ inp.addEventListener('input', function() {
   if (!val) { pb.innerHTML = '<span style="color:var(--muted2)">Start typing to see preview...</span>'; return; }
   if (p) {
     this.className = 'valid';
-    pb.innerHTML = '<span class="pill pill-name">@'+p.name+'</span><span class="arr">→</span>' +
-      '<span class="pill pill-item">'+p.item+'</span><span class="arr">+</span>' +
-      '<span class="pill pill-qty">'+p.qty+'</span><span class="arr">→</span>' +
+    pb.innerHTML = '<span class="pill pill-name">@'+p.name+'</span><span class="arr">→</span>'+
+      '<span class="pill pill-item">'+p.item+'</span><span class="arr">+</span>'+
+      '<span class="pill pill-qty">'+p.qty+'</span><span class="arr">→</span>'+
       '<span class="pill pill-ok">✓ Ready</span>';
   } else {
     this.className = 'invalid';
@@ -463,9 +239,6 @@ inp.addEventListener('input', function() {
 });
 inp.addEventListener('keydown', function(e){ if(e.key==='Enter') addEntry(); });
 
-// ══════════════════════════════
-//  ADD ENTRY
-// ══════════════════════════════
 function addEntry() {
   var p = parse(inp.value);
   if (!p) { showToast('⚠ Wrong format — use: @Name item quantity','err'); inp.focus(); return; }
@@ -474,8 +247,8 @@ function addEntry() {
   var now  = new Date();
   var time = now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
   var date = now.toLocaleDateString('en-IN');
-  sheets[p.name][p.item].push({ qty: p.qty, time: time, date: date });
-  log.unshift({ name: p.name, item: p.item, qty: p.qty, time: time, date: date });
+  sheets[p.name][p.item].push({ qty:p.qty, time:time, date:date });
+  log.unshift({ name:p.name, item:p.item, qty:p.qty, time:time, date:date });
   localStorage.setItem('bSheets', JSON.stringify(sheets));
   localStorage.setItem('bLog',    JSON.stringify(log));
   showToast('✅ @'+p.name+' › '+p.item+' › '+p.qty+' saved!','ok');
@@ -485,9 +258,6 @@ function addEntry() {
   renderQuickList();
 }
 
-// ══════════════════════════════
-//  QUICK LIST
-// ══════════════════════════════
 function renderQuickList() {
   var el = document.getElementById('quick-list');
   var names = Object.keys(sheets);
@@ -497,16 +267,12 @@ function renderQuickList() {
     var items = Object.keys(data);
     var total = items.reduce(function(s,i){ return s+data[i].reduce(function(a,e){ return a+e.qty; },0); },0);
     var count = items.reduce(function(s,i){ return s+data[i].length; },0);
-    return '<div class="quick-row">' +
-      '<div><span class="q-name">@'+name+'</span><span class="q-meta">'+count+' entries · '+items.length+' items</span></div>' +
-      '<span class="q-total">'+total+'</span>' +
-      '</div>';
+    return '<div class="quick-row">'+
+      '<div><span class="q-name">@'+name+'</span><span class="q-meta">'+count+' entries · '+items.length+' items</span></div>'+
+      '<span class="q-total">'+total+'</span></div>';
   }).join('');
 }
 
-// ══════════════════════════════
-//  SEARCH
-// ══════════════════════════════
 function renderSearch() {
   var q     = (document.getElementById('search-input').value||'').toLowerCase().trim();
   var names = Object.keys(sheets);
@@ -531,111 +297,111 @@ function renderSearch() {
       var entries = data[item];
       var itemTotal = entries.reduce(function(s,e){ return s+e.qty; },0);
       entries.forEach(function(e,idx) {
-        rows += '<tr><td style="font-weight:600">'+(idx===0?item:'<span style="color:var(--muted2);padding-left:8px">↳</span>')+'</td>' +
+        rows += '<tr><td style="font-weight:600">'+(idx===0?item:'<span style="color:var(--muted2);padding-left:8px">↳</span>')+'</td>'+
           '<td class="d-qty">'+e.qty+'</td><td class="d-time">'+e.time+' · '+e.date+'</td></tr>';
       });
       rows += '<tr class="sub-row"><td colspan="2">Subtotal: <b style="color:var(--amber)">'+itemTotal+'</b></td><td></td></tr>';
     });
-    return '<div class="customer-card">' +
-      '<div class="customer-head" onclick="toggleCustomer(\''+name+'\')">' +
-        '<div><div class="customer-name">@'+dispName+'</div>' +
-        '<div class="customer-meta">'+count+' entries · '+items.length+' items</div></div>' +
-        '<div class="customer-total">'+total+'</div>' +
-      '</div>' +
-      '<div class="customer-detail" id="cd-'+name+'">' +
-        '<table class="detail-table"><thead><tr><th>Item</th><th>Qty</th><th>Time/Date</th></tr></thead>' +
-        '<tbody>'+rows+'</tbody>' +
-        '<tfoot><tr class="grand-row"><td colspan="2">Grand Total: '+total+'</td><td></td></tr></tfoot>' +
-        '</table>' +
-        '<div class="detail-actions">' +
-          '<button class="dact-btn" onclick="exportCustomerCSV(\''+name+'\')">⬇ Export</button>' +
-          '<button class="dact-btn" onclick="printCustomer(\''+name+'\')">🖨 Print</button>' +
-          '<button class="dact-btn del" onclick="deleteCustomer(\''+name+'\')">🗑 Delete</button>' +
-        '</div>' +
+    return '<div class="customer-card">'+
+      '<div class="customer-head" onclick="toggleCustomer(\''+name+'\')">'+
+        '<div><div class="customer-name">@'+dispName+'</div>'+
+        '<div class="customer-meta">'+count+' entries · '+items.length+' items</div></div>'+
+        '<div class="customer-total">'+total+'</div>'+
+      '</div>'+
+      '<div class="customer-detail" id="cd-'+name+'">'+
+        '<table class="detail-table"><thead><tr><th>Item</th><th>Qty</th><th>Time/Date</th></tr></thead>'+
+        '<tbody>'+rows+'</tbody>'+
+        '<tfoot><tr class="grand-row"><td colspan="2">Grand Total: '+total+'</td><td></td></tr></tfoot>'+
+        '</table>'+
+        '<div class="detail-actions">'+
+          '<button class="dact-btn" onclick="exportCustomerCSV(\''+name+'\')">⬇ Export</button>'+
+          '<button class="dact-btn" onclick="printCustomer(\''+name+'\')">🖨 Print</button>'+
+          '<button class="dact-btn del" onclick="deleteCustomer(\''+name+'\')">🗑 Delete</button>'+
+        '</div>'+
       '</div></div>';
   }).join('');
 }
 
-function toggleCustomer(name) {
-  document.getElementById('cd-'+name).classList.toggle('open');
-}
+function toggleCustomer(name) { document.getElementById('cd-'+name).classList.toggle('open'); }
 
-// ══════════════════════════════
-//  LOG
-// ══════════════════════════════
 function renderLog() {
   var el = document.getElementById('log-list');
   if (!log.length) { el.innerHTML = '<div class="empty-msg">No entries yet</div>'; return; }
   el.innerHTML = log.slice(0,50).map(function(e) {
-    return '<div class="log-item">' +
-      '<span class="log-time">'+e.time+'</span>' +
-      '<span class="log-main"><b>@'+e.name+'</b> › '+e.item+'</span>' +
+    return '<div class="log-item">'+
+      '<span class="log-time">'+e.time+'</span>'+
+      '<span class="log-main"><b>@'+e.name+'</b> › '+e.item+'</span>'+
       '<span class="log-qty">'+e.qty+'</span></div>';
   }).join('');
 }
+
 function clearLog() {
   if (!confirm("Clear log? Entry data is kept.")) return;
   log=[]; localStorage.setItem('bLog',JSON.stringify(log));
   renderLog(); showToast('Log cleared','ok');
 }
 
-// ══════════════════════════════
-//  CUSTOMER ACTIONS
-// ══════════════════════════════
 function deleteCustomer(name) {
   if (!confirm('Delete ALL data for @'+name+'?')) return;
   delete sheets[name]; localStorage.setItem('bSheets',JSON.stringify(sheets));
   renderSearch(); renderQuickList(); showToast('@'+name+' deleted','ok');
 }
+
 function exportCustomerCSV(name) {
   var data=sheets[name]; if(!data) return;
   var csv='Customer,Item,Quantity,Time,Date\n';
   Object.keys(data).forEach(function(item){ data[item].forEach(function(e){ csv+=name+','+item+','+e.qty+',"'+e.time+'","'+e.date+'"\n'; }); });
   dlFile(name+'_orders.csv',csv,'text/csv');
-  showToast('Exported @'+name,"'s data",'ok');
+  showToast('Exported @'+name,'ok');
 }
+
 function exportAll() {
   if(!Object.keys(sheets).length){showToast('No data yet','err');return;}
   var csv='Customer,Item,Quantity,Time,Date\n';
   Object.keys(sheets).forEach(function(name){ Object.keys(sheets[name]).forEach(function(item){ sheets[name][item].forEach(function(e){ csv+=name+','+item+','+e.qty+',"'+e.time+'","'+e.date+'"\n'; }); }); });
   dlFile('all_orders.csv',csv,'text/csv'); showToast('All data exported!','ok');
 }
+
 function printCustomer(name) {
   var data=sheets[name]; if(!data) return;
-  var html='<html><head><title>'+name+'</title><style>body{font-family:sans-serif;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:7px 10px;text-align:left;font-size:.88rem}th{background:#fef3c7}h2{color:#b45309}.t{font-weight:700;background:#fffbeb}</style></head><body><h2>@'+name+' — Order Summary</h2><p>'+new Date().toLocaleString('en-IN')+'</p><table><thead><tr><th>Item</th><th>Total Qty</th></tr></thead><tbody>';
+  var html='<html><head><title>'+name+'</title><style>body{font-family:sans-serif;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:7px 10px;text-align:left;font-size:.88rem}th{background:#fef3c7}h2{color:#b45309}.t{font-weight:700;background:#fffbeb}</style></head><body>'+
+    '<h2>@'+name+' — Order Summary</h2><p>Padippura Builders &amp; Developers</p><p>'+new Date().toLocaleString('en-IN')+'</p>'+
+    '<table><thead><tr><th>Item</th><th>Total Qty</th></tr></thead><tbody>';
   var grand=0;
   Object.keys(data).forEach(function(item){ var t=data[item].reduce(function(s,e){return s+e.qty;},0); grand+=t; html+='<tr><td>'+item+'</td><td>'+t+'</td></tr>'; });
   html+='<tr class="t"><td>TOTAL</td><td>'+grand+'</td></tr></tbody></table></body></html>';
   var w=window.open('','_blank'); w.document.write(html); w.document.close(); setTimeout(function(){w.print();},400);
 }
+
 function printSummary() {
   var names=Object.keys(sheets); if(!names.length){showToast('No data','err');return;}
-  var html='<html><head><title>Summary</title><style>body{font-family:sans-serif;padding:20px}table{width:100%;border-collapse:collapse;margin-bottom:16px}th,td{border:1px solid #ddd;padding:7px 10px;text-align:left;font-size:.88rem}th{background:#fef3c7}h3{color:#b45309;margin:20px 0 8px}.t{font-weight:700;background:#fffbeb}</style></head><body><h2>🏗️ Padippura Builders &amp; Developers — Order Summary</h2><p>'+new Date().toLocaleString('en-IN')+'</p>';
-  names.forEach(function(name){ html+='<h3>@'+name+'</h3><table><thead><tr><th>Item</th><th>Total</th></tr></thead><tbody>'; var grand=0; Object.keys(sheets[name]).forEach(function(item){ var t=sheets[name][item].reduce(function(s,e){return s+e.qty;},0); grand+=t; html+='<tr><td>'+item+'</td><td>'+t+'</td></tr>'; }); html+='<tr class="t"><td>TOTAL</td><td>'+grand+'</td></tr></tbody></table>'; });
+  var html='<html><head><title>Summary</title><style>body{font-family:sans-serif;padding:20px}table{width:100%;border-collapse:collapse;margin-bottom:16px}th,td{border:1px solid #ddd;padding:7px 10px;text-align:left;font-size:.88rem}th{background:#fef3c7}h3{color:#b45309;margin:20px 0 8px}.t{font-weight:700;background:#fffbeb}</style></head><body>'+
+    '<h2>🏗️ Padippura Builders &amp; Developers</h2><p>Order Summary — '+new Date().toLocaleString('en-IN')+'</p>';
+  names.forEach(function(name){
+    html+='<h3>@'+name+'</h3><table><thead><tr><th>Item</th><th>Total</th></tr></thead><tbody>';
+    var grand=0;
+    Object.keys(sheets[name]).forEach(function(item){ var t=sheets[name][item].reduce(function(s,e){return s+e.qty;},0); grand+=t; html+='<tr><td>'+item+'</td><td>'+t+'</td></tr>'; });
+    html+='<tr class="t"><td>TOTAL</td><td>'+grand+'</td></tr></tbody></table>';
+  });
   html+='</body></html>'; var w=window.open('','_blank'); w.document.write(html); w.document.close(); setTimeout(function(){w.print();},400);
 }
+
 function resetAll() {
   if(!confirm('RESET ALL DATA?')) return;
-  sheets={}; log=[]; localStorage.removeItem('bSheets'); localStorage.removeItem('bLog');
+  sheets={}; log=[];
+  localStorage.removeItem('bSheets'); localStorage.removeItem('bLog');
   renderQuickList(); renderSearch(); renderLog(); showToast('All data reset','ok');
 }
+
 function dlFile(name,content,type){ var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type:type})); a.download=name; a.click(); }
 
-// ══════════════════════════════
-//  TOAST
-// ══════════════════════════════
 var tt;
 function showToast(msg,type){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+type+' show'; clearTimeout(tt); tt=setTimeout(function(){t.className='toast';},2600); }
 
-// ══════════════════════════════
-//  PWA
-// ══════════════════════════════
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js').catch(function(){}); }
 
-// ══════════════════════════════
-//  INIT
-// ══════════════════════════════
 renderQuickList();
+inp.focus();
 </script>
 </body>
 </html>
