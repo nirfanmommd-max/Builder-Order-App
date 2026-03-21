@@ -22,362 +22,151 @@
   --muted2:    #555;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-body {
-  font-family: 'Barlow', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-/* ── HEADER BAR ─────────────────────────────── */
 .topbar {
   background: var(--surface);
   border-bottom: 2px solid var(--amber);
   padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 58px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 58px; position: sticky; top: 0; z-index: 100;
 }
-.logo {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--text);
-}
+.logo { font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
 .logo span { color: var(--amber); }
-.topbar-right {
-  font-size: 0.78rem;
-  color: var(--muted);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
+.topbar-right { display: flex; align-items: center; gap: 16px; font-size: 0.78rem; color: var(--muted); }
 #clock { color: var(--amber); font-weight: 600; }
-
-/* ── LAYOUT ─────────────────────────────────── */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  height: calc(100vh - 58px);
+.sync-status {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px;
+  transition: all 0.3s;
 }
+.sync-status.idle    { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+.sync-status.syncing { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.sync-status.error   { background: rgba(239,68,68,0.12);  color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; }
+.idle    .sync-dot { background: #22c55e; }
+.syncing .sync-dot { background: var(--amber); animation: pulse 0.8s infinite; }
+.error   .sync-dot { background: var(--red); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-.left-panel {
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+.layout { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 58px); }
+.left-panel  { border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.right-panel { display: flex; flex-direction: column; overflow: hidden; }
 
-.right-panel {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* ── SECTION LABEL ──────────────────────────── */
 .section-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding: 14px 20px 10px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+  padding: 14px 20px 10px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
 }
 
-/* ── INPUT ZONE ─────────────────────────────── */
-.input-zone {
-  padding: 20px;
-  border-bottom: 1px solid var(--border);
-}
-
+.input-zone { padding: 20px; border-bottom: 1px solid var(--border); }
 .hint-bar {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-left: 3px solid var(--amber);
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-bottom: 16px;
-  line-height: 1.7;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-left: 3px solid var(--amber); border-radius: 6px;
+  padding: 10px 14px; font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; line-height: 1.7;
 }
-.hint-bar code {
-  background: rgba(245,158,11,0.12);
-  color: var(--amber);
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.82rem;
-}
+.hint-bar code { background: rgba(245,158,11,0.12); color: var(--amber); padding: 1px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
 
-.input-wrapper {
-  position: relative;
-  margin-bottom: 10px;
-}
-.at-sign {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: var(--amber);
-  font-family: 'Barlow Condensed', sans-serif;
-  pointer-events: none;
-}
+.input-wrapper { position: relative; margin-bottom: 10px; }
+.at-sign { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.3rem; font-weight: 800; color: var(--amber); font-family: 'Barlow Condensed', sans-serif; pointer-events: none; }
 #entry-input {
-  width: 100%;
-  background: var(--surface2);
-  border: 2px solid var(--border2);
-  border-radius: 10px;
-  padding: 15px 16px 15px 38px;
-  color: var(--text);
-  font-size: 1.05rem;
-  font-family: 'Courier New', monospace;
-  outline: none;
-  transition: border-color 0.2s;
-  letter-spacing: 0.3px;
+  width: 100%; background: var(--surface2); border: 2px solid var(--border2);
+  border-radius: 10px; padding: 15px 16px 15px 38px; color: var(--text);
+  font-size: 1.05rem; font-family: 'Courier New', monospace; outline: none; transition: border-color 0.2s;
 }
-#entry-input:focus { border-color: var(--amber); }
+#entry-input:focus  { border-color: var(--amber); }
 #entry-input::placeholder { color: var(--muted2); }
 #entry-input.valid   { border-color: var(--green); }
 #entry-input.invalid { border-color: var(--red); }
 
 .add-btn {
-  width: 100%;
-  background: var(--amber);
-  color: #000;
-  border: none;
-  border-radius: 10px;
-  padding: 14px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  width: 100%; background: var(--amber); color: #000; border: none; border-radius: 10px;
+  padding: 14px; font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem;
+  font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: background 0.2s;
 }
-.add-btn:hover  { background: var(--amber2); }
-.add-btn:active { transform: scale(0.98); }
+.add-btn:hover    { background: var(--amber2); }
+.add-btn:disabled { background: var(--muted2); color: var(--muted); cursor: not-allowed; }
 
-/* ── LIVE PREVIEW ───────────────────────────── */
 .preview-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 32px;
-  flex-wrap: wrap;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
+  display: flex; align-items: center; gap: 8px; min-height: 32px;
+  flex-wrap: wrap; padding: 10px 20px; border-bottom: 1px solid var(--border); background: var(--surface);
 }
-.pill {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-.pill-name  { background: rgba(59,130,246,0.18); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
-.pill-item  { background: rgba(34,197,94,0.15);  color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
-.pill-qty   { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
-.pill-ok    { background: rgba(34,197,94,0.15);  color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
-.pill-err   { background: rgba(239,68,68,0.15);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+.pill { padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; }
+.pill-name  { background: rgba(59,130,246,0.18);  color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+.pill-item  { background: rgba(34,197,94,0.15);   color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+.pill-qty   { background: rgba(245,158,11,0.15);  color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+.pill-ok    { background: rgba(34,197,94,0.15);   color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+.pill-err   { background: rgba(239,68,68,0.15);   color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
 .arr { color: var(--muted2); font-size: 0.85rem; }
 
-/* ── LOG ────────────────────────────────────── */
-.log-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-}
+.log-scroll { flex: 1; overflow-y: auto; padding: 12px; }
 .log-scroll::-webkit-scrollbar { width: 4px; }
-.log-scroll::-webkit-scrollbar-track { background: var(--bg); }
 .log-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
 .log-item {
-  display: grid;
-  grid-template-columns: 46px 1fr auto;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  background: var(--surface2);
-  margin-bottom: 6px;
-  border-left: 3px solid var(--amber);
-  animation: fadeSlide 0.25s ease;
+  display: grid; grid-template-columns: 46px 1fr auto auto;
+  align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px; background: var(--surface2);
+  margin-bottom: 6px; border-left: 3px solid var(--amber); animation: fadeSlide 0.25s ease;
 }
-@keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.log-time  { font-size: 0.7rem; color: var(--muted); font-weight: 500; }
-.log-main  { font-size: 0.85rem; }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.log-time { font-size: 0.7rem; color: var(--muted); font-weight: 500; }
+.log-main { font-size: 0.85rem; }
 .log-main b { color: var(--amber); font-weight: 700; }
-.log-qty   {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--green);
-  background: rgba(34,197,94,0.1);
-  padding: 2px 8px;
-  border-radius: 6px;
-}
+.log-qty  { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: var(--green); background: rgba(34,197,94,0.1); padding: 2px 8px; border-radius: 6px; }
+.log-sync { font-size: 0.72rem; }
 .log-empty { text-align: center; color: var(--muted2); padding: 40px 20px; font-size: 0.88rem; }
 
-/* ── RIGHT PANEL TABS ───────────────────────── */
-.sheet-tabs-row {
-  display: flex;
-  overflow-x: auto;
-  background: var(--surface);
-  border-bottom: 2px solid var(--border);
-  padding: 0 8px;
-  flex-shrink: 0;
-}
-.sheet-tabs-row::-webkit-scrollbar { height: 0; }
-.sheet-tab {
-  padding: 12px 18px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--muted);
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-  transition: all 0.15s;
-  font-family: 'Barlow Condensed', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-}
-.sheet-tab:hover  { color: var(--text); }
+/* retry button in log */
+.retry-btn { font-size: 0.7rem; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; border-radius: 5px; padding: 2px 7px; cursor: pointer; }
+
+.sheet-tabs-row { display: flex; overflow-x: auto; background: var(--surface); border-bottom: 2px solid var(--border); padding: 0 8px; flex-shrink: 0; }
+.sheet-tab { padding: 12px 18px; font-size: 0.85rem; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; text-transform: uppercase; transition: all 0.15s; }
 .sheet-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
 
-/* ── SHEET TABLE ────────────────────────────── */
-.sheet-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
+.sheet-body { flex: 1; overflow-y: auto; padding: 16px; }
 .sheet-body::-webkit-scrollbar { width: 4px; }
 .sheet-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.stat-box {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  padding: 12px 14px;
-}
+.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+.stat-box { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 14px; }
 .stat-box .s-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 2px; }
 .stat-box .s-val   { font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--amber); }
 
 .data-table { width: 100%; border-collapse: collapse; }
-.data-table th {
-  text-align: left;
-  padding: 8px 10px;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border2);
-  font-weight: 700;
-}
-.data-table td {
-  padding: 9px 10px;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.87rem;
-}
-.data-table tr:last-child td { border-bottom: none; }
-.data-table .item-name  { font-weight: 700; color: var(--text); }
+.data-table th { text-align: left; padding: 8px 10px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); border-bottom: 1px solid var(--border2); }
+.data-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
 .data-table .entry-qty  { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; color: var(--amber); font-size: 1rem; }
 .data-table .entry-time { font-size: 0.75rem; color: var(--muted); }
 .data-table .sub-row td { background: rgba(245,158,11,0.04); font-size: 0.78rem; color: var(--muted); }
 .data-table .total-row td { font-weight: 800; color: var(--amber); border-top: 1px solid var(--border2); padding-top: 12px; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; }
-
-.no-sheet {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: var(--muted2);
-  text-align: center;
-  gap: 10px;
-}
+.no-sheet { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--muted2); text-align: center; gap: 10px; }
 .no-sheet .icon { font-size: 3rem; opacity: 0.3; }
-.no-sheet p { font-size: 0.88rem; }
 
-/* ── EXPORT BAR ─────────────────────────────── */
-.export-bar {
-  display: flex;
-  gap: 8px;
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
-  background: var(--surface);
-  flex-wrap: wrap;
-}
-.xbtn {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  color: var(--muted);
-  border-radius: 7px;
-  padding: 7px 13px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  font-family: 'Barlow Condensed', sans-serif;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.xbtn:hover { background: var(--border2); color: var(--text); border-color: var(--muted); }
+.export-bar { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface); flex-wrap: wrap; }
+.xbtn { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); border-radius: 7px; padding: 7px 13px; font-size: 0.78rem; font-weight: 700; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
+.xbtn:hover { background: var(--border2); color: var(--text); }
 .xbtn.danger { border-color: #7f1d1d; color: #fca5a5; }
 .xbtn.danger:hover { background: #7f1d1d; color: white; }
 
-/* ── TOAST ──────────────────────────────────── */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  padding: 12px 22px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  z-index: 999;
-  transition: transform 0.3s ease, opacity 0.3s;
-  opacity: 0;
-  white-space: nowrap;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+/* pending queue banner */
+.queue-banner {
+  display: none; background: rgba(245,158,11,0.1); border-bottom: 1px solid rgba(245,158,11,0.3);
+  padding: 8px 20px; font-size: 0.8rem; color: var(--amber);
+  align-items: center; gap: 8px;
 }
+.queue-banner.show { display: flex; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 22px; font-size: 0.88rem; font-weight: 600; z-index: 999; transition: transform 0.3s, opacity 0.3s; opacity: 0; white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 .toast.ok  { border-color: var(--green); color: var(--green); }
 .toast.err { border-color: var(--red);   color: var(--red); }
+.toast.info { border-color: var(--amber); color: var(--amber); }
 
-/* ── RESPONSIVE ─────────────────────────────── */
 @media (max-width: 640px) {
   .layout { grid-template-columns: 1fr; height: auto; }
-  .left-panel  { height: auto; }
   .right-panel { height: 60vh; border-top: 2px solid var(--border); }
   .log-scroll  { max-height: 240px; }
 }
@@ -385,19 +174,25 @@ body {
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="logo">🏗️ Builder <span>Order Entry</span></div>
-  <div class="topbar-right">Single window &bull; Auto-routes &bull; <span id="clock"></span></div>
+  <div class="topbar-right">
+    <div class="sync-status idle" id="sync-status">
+      <div class="sync-dot"></div>
+      <span id="sync-label">Google Sheets connected</span>
+    </div>
+    <span id="clock"></span>
+  </div>
 </div>
 
-<!-- MAIN LAYOUT -->
+<div class="queue-banner" id="queue-banner">
+  ⚡ <span id="queue-count">0</span> entries waiting to sync to Google Sheets — will retry automatically when online
+</div>
+
 <div class="layout">
 
-  <!-- ═══ LEFT PANEL ═══ -->
+  <!-- LEFT PANEL -->
   <div class="left-panel">
-
-    <!-- Input Zone -->
     <div class="input-zone">
       <div class="hint-bar">
         Format: <code>@Name&nbsp;&nbsp;item&nbsp;&nbsp;quantity</code><br>
@@ -407,339 +202,388 @@ body {
         <span class="at-sign">@</span>
         <input type="text" id="entry-input" placeholder="Irfan cement 1000" autocomplete="off" spellcheck="false" />
       </div>
-      <button class="add-btn" onclick="addEntry()">⚡ Add Entry &nbsp;(or press Enter)</button>
+      <button class="add-btn" id="add-btn" onclick="addEntry()">⚡ Add Entry &nbsp;(or press Enter)</button>
     </div>
 
-    <!-- Live Preview -->
     <div class="preview-bar" id="preview-bar">
-      <span style="color:var(--muted2);font-size:0.82rem;">Live preview will appear here as you type...</span>
+      <span style="color:var(--muted2);font-size:0.82rem;">Live preview appears here as you type...</span>
     </div>
 
-    <!-- Section Label -->
     <div class="section-label">
       <span>📋 Today's Entry Log</span>
       <button onclick="clearLog()" style="background:transparent;border:1px solid #333;color:var(--muted);border-radius:5px;padding:3px 10px;font-size:0.72rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;">Clear</button>
     </div>
 
-    <!-- Log -->
     <div class="log-scroll" id="log-scroll">
       <div class="log-empty">No entries yet.<br>Start typing above ↑</div>
     </div>
-
   </div>
 
-  <!-- ═══ RIGHT PANEL ═══ -->
+  <!-- RIGHT PANEL -->
   <div class="right-panel">
-
-    <!-- Sheet Tabs -->
-    <div class="section-label" style="border-bottom:none;">
-      <span>📊 Customer Sheets</span>
-    </div>
+    <div class="section-label" style="border-bottom:none;"><span>📊 Customer Sheets</span></div>
     <div class="sheet-tabs-row" id="sheet-tabs">
       <div style="padding:12px 16px;color:var(--muted2);font-size:0.8rem;font-style:italic;">No customers yet</div>
     </div>
-
-    <!-- Sheet Body -->
     <div class="sheet-body" id="sheet-body">
-      <div class="no-sheet">
-        <div class="icon">📂</div>
-        <p>Customer sheets appear here<br>as you add entries</p>
-      </div>
+      <div class="no-sheet"><div class="icon">📂</div><p>Customer sheets appear here<br>as you add entries</p></div>
     </div>
-
-    <!-- Export Bar -->
     <div class="export-bar">
       <button class="xbtn" onclick="exportCSV()">⬇ Export This Sheet</button>
       <button class="xbtn" onclick="exportAll()">📄 Export All</button>
       <button class="xbtn" onclick="printSummary()">🖨 Print Summary</button>
+      <button class="xbtn" onclick="retryAll()" id="retry-all-btn" style="display:none;border-color:#f59e0b;color:#f59e0b;">🔄 Retry Failed</button>
       <button class="xbtn danger" onclick="resetAll()">🗑 Reset All</button>
     </div>
-
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  CONFIG — Google Apps Script URL
+// ═══════════════════════════════════════════
+var SHEET_URL = 'https://script.google.com/macros/s/AKfycbz1AxspZzp9ytFPihrdSnB8gzjHG7NSNzW4pEaH5qGngzK6mr5ny3JK7Zp43T8wKYp1aw/exec';
+
+// ═══════════════════════════════════════════
 //  DATA STORE
-// ════════════════════════════════════════
-var sheets = JSON.parse(localStorage.getItem('bSheets') || '{}');
-var log    = JSON.parse(localStorage.getItem('bLog')    || '[]');
+// ═══════════════════════════════════════════
+var sheets  = JSON.parse(localStorage.getItem('bSheets') || '{}');
+var log     = JSON.parse(localStorage.getItem('bLog')    || '[]');
+var pending = JSON.parse(localStorage.getItem('bPending')|| '[]'); // offline queue
 var activeTab = null;
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  CLOCK
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 function tick() {
   var now = new Date();
   document.getElementById('clock').textContent =
-    now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    now.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', second:'2-digit' });
 }
-tick();
-setInterval(tick, 1000);
+tick(); setInterval(tick, 1000);
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  SYNC STATUS UI
+// ═══════════════════════════════════════════
+function setSyncStatus(state, label) {
+  var el = document.getElementById('sync-status');
+  var lb = document.getElementById('sync-label');
+  el.className = 'sync-status ' + state;
+  lb.textContent = label;
+}
+
+function updateQueueBanner() {
+  var banner = document.getElementById('queue-banner');
+  var retryBtn = document.getElementById('retry-all-btn');
+  if (pending.length > 0) {
+    banner.classList.add('show');
+    document.getElementById('queue-count').textContent = pending.length;
+    retryBtn.style.display = 'inline-block';
+  } else {
+    banner.classList.remove('show');
+    retryBtn.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════
+//  SEND TO GOOGLE SHEETS
+// ═══════════════════════════════════════════
+function sendToSheet(entry, logId, isRetry) {
+  setSyncStatus('syncing', 'Saving to Google Sheets...');
+
+  var payload = {
+    date: entry.date,
+    time: entry.time,
+    name: entry.name,
+    item: entry.item,
+    qty:  entry.qty
+  };
+
+  fetch(SHEET_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (data.status === 'ok') {
+      setSyncStatus('idle', 'Google Sheets connected');
+      updateLogItemStatus(logId, 'synced');
+      if (isRetry) {
+        pending = pending.filter(function(p){ return p.logId !== logId; });
+        localStorage.setItem('bPending', JSON.stringify(pending));
+        updateQueueBanner();
+      }
+    } else {
+      throw new Error(data.message || 'Sheet error');
+    }
+  })
+  .catch(function(err) {
+    setSyncStatus('error', 'Sync failed — saved locally');
+    updateLogItemStatus(logId, 'failed');
+    if (!isRetry) {
+      pending.push({ entry: entry, logId: logId });
+      localStorage.setItem('bPending', JSON.stringify(pending));
+      updateQueueBanner();
+    }
+  });
+}
+
+function updateLogItemStatus(logId, status) {
+  var el = document.getElementById('lsync-' + logId);
+  if (!el) return;
+  if (status === 'synced') {
+    el.textContent = '☁ Saved';
+    el.style.color = '#22c55e';
+  } else {
+    el.innerHTML = '<button class="retry-btn" onclick="retrySingle(\'' + logId + '\')">↺ Retry</button>';
+  }
+  // Also update log data
+  log.forEach(function(e){ if(e.logId === logId) e.synced = (status === 'synced'); });
+  localStorage.setItem('bLog', JSON.stringify(log));
+}
+
+function retrySingle(logId) {
+  var item = pending.find(function(p){ return p.logId === logId; });
+  if (item) sendToSheet(item.entry, logId, true);
+}
+
+function retryAll() {
+  if (!pending.length) { showToast('No pending items', 'info'); return; }
+  pending.forEach(function(p){ sendToSheet(p.entry, p.logId, true); });
+  showToast('Retrying ' + pending.length + ' items...', 'info');
+}
+
+// ═══════════════════════════════════════════
 //  PARSE
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 function parseEntry(raw) {
-  // accept with or without leading @
-  var clean = raw.trim().replace(/^@/, '');
+  var clean = raw.trim().replace(/^@/,'');
   var m = clean.match(/^(\S+)\s+(\S+)\s+(\d+(?:\.\d+)?)$/);
   if (!m) return null;
   return { name: m[1], item: m[2].toLowerCase(), qty: parseFloat(m[3]) };
 }
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  LIVE PREVIEW
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 var inp = document.getElementById('entry-input');
-
-inp.addEventListener('input', function () {
+inp.addEventListener('input', function() {
   var val = this.value.trim();
   var pb  = document.getElementById('preview-bar');
   var p   = parseEntry(val);
   this.className = '';
-  if (!val) {
-    pb.innerHTML = '<span style="color:var(--muted2);font-size:0.82rem;">Live preview will appear here as you type...</span>';
-    return;
-  }
+  if (!val) { pb.innerHTML = '<span style="color:var(--muted2);font-size:0.82rem;">Live preview appears here as you type...</span>'; return; }
   if (p) {
     this.className = 'valid';
     pb.innerHTML =
-      '<span class="pill pill-name">@' + p.name + '</span>' +
-      '<span class="arr">→</span>' +
-      '<span class="pill pill-item">' + p.item + '</span>' +
-      '<span class="arr">+</span>' +
-      '<span class="pill pill-qty">' + p.qty + '</span>' +
-      '<span class="arr">→</span>' +
+      '<span class="pill pill-name">@'+p.name+'</span><span class="arr">→</span>' +
+      '<span class="pill pill-item">'+p.item+'</span><span class="arr">+</span>' +
+      '<span class="pill pill-qty">'+p.qty+'</span><span class="arr">→</span>' +
       '<span class="pill pill-ok">✓ Ready to save</span>';
   } else {
     this.className = 'invalid';
-    pb.innerHTML = '<span class="pill pill-err">⚠ Wrong format — use: @Name item quantity</span>';
+    pb.innerHTML = '<span class="pill pill-err">⚠ Format: @Name item quantity</span>';
   }
 });
+inp.addEventListener('keydown', function(e){ if(e.key==='Enter') addEntry(); });
 
-inp.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') addEntry();
-});
-
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  ADD ENTRY
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 function addEntry() {
   var p = parseEntry(inp.value);
-  if (!p) { showToast('⚠ Wrong format. Use: @Name item quantity', false); inp.focus(); return; }
+  if (!p) { showToast('⚠ Wrong format — use: @Name item quantity', 'err'); inp.focus(); return; }
 
-  if (!sheets[p.name])        sheets[p.name] = {};
+  if (!sheets[p.name])         sheets[p.name] = {};
   if (!sheets[p.name][p.item]) sheets[p.name][p.item] = [];
 
-  var now  = new Date();
-  var time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  var date = now.toLocaleDateString('en-IN');
+  var now    = new Date();
+  var time   = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  var date   = now.toLocaleDateString('en-IN');
+  var logId  = 'lid-' + Date.now();
+
+  var entry = { name: p.name, item: p.item, qty: p.qty, time: time, date: date };
 
   sheets[p.name][p.item].push({ qty: p.qty, time: time, date: date });
-  log.unshift({ name: p.name, item: p.item, qty: p.qty, time: time });
+  log.unshift({ logId: logId, name: p.name, item: p.item, qty: p.qty, time: time, synced: false });
 
   localStorage.setItem('bSheets', JSON.stringify(sheets));
   localStorage.setItem('bLog',    JSON.stringify(log));
 
-  showToast('✅ Saved — @' + p.name + ' › ' + p.item + ' › ' + p.qty, true);
+  showToast('✅ @'+p.name+' › '+p.item+' › '+p.qty+' — saving to cloud...', 'ok');
   inp.value = '';
   inp.className = '';
-  document.getElementById('preview-bar').innerHTML =
-    '<span style="color:var(--muted2);font-size:0.82rem;">Live preview will appear here as you type...</span>';
+  document.getElementById('preview-bar').innerHTML = '<span style="color:var(--muted2);font-size:0.82rem;">Live preview appears here as you type...</span>';
   inp.focus();
 
   renderLog();
   renderTabs(p.name);
+
+  // Send to Google Sheets
+  sendToSheet(entry, logId, false);
 }
 
-// ════════════════════════════════════════
-//  LOG
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  RENDER LOG
+// ═══════════════════════════════════════════
 function renderLog() {
   var el = document.getElementById('log-scroll');
-  if (!log.length) {
-    el.innerHTML = '<div class="log-empty">No entries yet.<br>Start typing above ↑</div>';
-    return;
-  }
-  el.innerHTML = log.slice(0, 40).map(function (e) {
+  if (!log.length) { el.innerHTML = '<div class="log-empty">No entries yet.<br>Start typing above ↑</div>'; return; }
+  el.innerHTML = log.slice(0,40).map(function(e) {
+    var syncHtml = e.synced
+      ? '<span class="log-sync" id="lsync-'+e.logId+'" style="color:#22c55e;">☁ Saved</span>'
+      : '<span class="log-sync" id="lsync-'+e.logId+'" style="color:var(--amber);">⏳ Syncing</span>';
     return '<div class="log-item">' +
-      '<span class="log-time">' + e.time + '</span>' +
-      '<span class="log-main"><b>@' + e.name + '</b> &rsaquo; ' + e.item + '</span>' +
-      '<span class="log-qty">' + e.qty + '</span>' +
+      '<span class="log-time">'+e.time+'</span>' +
+      '<span class="log-main"><b>@'+e.name+'</b> › '+e.item+'</span>' +
+      '<span class="log-qty">'+e.qty+'</span>' +
+      syncHtml +
       '</div>';
   }).join('');
 }
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  TABS
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 function renderTabs(selectName) {
   var names  = Object.keys(sheets);
   var tabsEl = document.getElementById('sheet-tabs');
-  if (!names.length) {
-    tabsEl.innerHTML = '<div style="padding:12px 16px;color:var(--muted2);font-size:0.8rem;font-style:italic;">No customers yet</div>';
-    return;
-  }
+  if (!names.length) { tabsEl.innerHTML = '<div style="padding:12px 16px;color:var(--muted2);font-size:0.8rem;font-style:italic;">No customers yet</div>'; return; }
   if (selectName) activeTab = selectName;
   if (!activeTab || !sheets[activeTab]) activeTab = names[0];
-  tabsEl.innerHTML = names.map(function (n) {
-    return '<div class="sheet-tab ' + (n === activeTab ? 'active' : '') + '" onclick="switchTab(\'' + n + '\')">' + n + '</div>';
+  tabsEl.innerHTML = names.map(function(n){
+    return '<div class="sheet-tab '+(n===activeTab?'active':'')+'" onclick="switchTab(\''+n+'\')">'+n+'</div>';
   }).join('');
   renderSheet();
 }
-
 function switchTab(name) { activeTab = name; renderTabs(); }
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  SHEET CONTENT
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 function renderSheet() {
   var el = document.getElementById('sheet-body');
-  if (!activeTab || !sheets[activeTab]) {
-    el.innerHTML = '<div class="no-sheet"><div class="icon">📂</div><p>Select a customer above</p></div>';
-    return;
-  }
+  if (!activeTab || !sheets[activeTab]) { el.innerHTML = '<div class="no-sheet"><div class="icon">📂</div><p>Select a customer above</p></div>'; return; }
   var data   = sheets[activeTab];
   var items  = Object.keys(data);
-  var tEntries = items.reduce(function (s, i) { return s + data[i].length; }, 0);
-  var tQty     = items.reduce(function (s, i) { return s + data[i].reduce(function (a, e) { return a + e.qty; }, 0); }, 0);
-
+  var tEntries = items.reduce(function(s,i){return s+data[i].length;},0);
+  var tQty     = items.reduce(function(s,i){return s+data[i].reduce(function(a,e){return a+e.qty;},0);},0);
   var rows = '';
-  items.forEach(function (item) {
+  items.forEach(function(item) {
     var entries   = data[item];
-    var itemTotal = entries.reduce(function (s, e) { return s + e.qty; }, 0);
-    entries.forEach(function (e, idx) {
-      rows +=
-        '<tr>' +
-        '<td class="item-name">' + (idx === 0 ? item : '<span style="color:var(--muted2);padding-left:10px;">↳</span>') + '</td>' +
-        '<td class="entry-qty">' + e.qty + '</td>' +
-        '<td class="entry-time">' + e.time + ' &bull; ' + e.date + '</td>' +
-        '</tr>';
+    var itemTotal = entries.reduce(function(s,e){return s+e.qty;},0);
+    entries.forEach(function(e,idx){
+      rows += '<tr><td>'+(idx===0?'<strong>'+item+'</strong>':'<span style="color:var(--muted2);padding-left:10px">↳</span>')+'</td>' +
+        '<td class="entry-qty">'+e.qty+'</td><td class="entry-time">'+e.time+' · '+e.date+'</td></tr>';
     });
-    rows +=
-      '<tr class="sub-row">' +
-      '<td colspan="2" style="padding:5px 10px;">Subtotal: <b style="color:var(--amber)">' + itemTotal + '</b></td>' +
-      '<td></td></tr>';
+    rows += '<tr class="sub-row"><td colspan="2" style="padding:5px 10px;">Subtotal: <b style="color:var(--amber)">'+itemTotal+'</b></td><td></td></tr>';
   });
-
   el.innerHTML =
     '<div class="stats-row">' +
-    '<div class="stat-box"><div class="s-label">Items</div><div class="s-val">' + items.length + '</div></div>' +
-    '<div class="stat-box"><div class="s-label">Entries</div><div class="s-val">' + tEntries + '</div></div>' +
-    '<div class="stat-box"><div class="s-label">Total Qty</div><div class="s-val">' + tQty + '</div></div>' +
+    '<div class="stat-box"><div class="s-label">Items</div><div class="s-val">'+items.length+'</div></div>' +
+    '<div class="stat-box"><div class="s-label">Entries</div><div class="s-val">'+tEntries+'</div></div>' +
+    '<div class="stat-box"><div class="s-label">Total Qty</div><div class="s-val">'+tQty+'</div></div>' +
     '</div>' +
-    '<table class="data-table">' +
-    '<thead><tr><th>Item</th><th>Qty</th><th>Time / Date</th></tr></thead>' +
-    '<tbody>' + rows + '</tbody>' +
-    '<tfoot><tr class="total-row"><td colspan="2">GRAND TOTAL &nbsp; ' + tQty + '</td><td></td></tr></tfoot>' +
-    '</table>';
+    '<table class="data-table"><thead><tr><th>Item</th><th>Qty</th><th>Time / Date</th></tr></thead>' +
+    '<tbody>'+rows+'</tbody>' +
+    '<tfoot><tr class="total-row"><td colspan="2">GRAND TOTAL &nbsp; '+tQty+'</td><td></td></tr></tfoot></table>';
 }
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  EXPORT
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 function exportCSV() {
-  if (!activeTab || !sheets[activeTab]) { showToast('Select a customer first', false); return; }
+  if (!activeTab||!sheets[activeTab]) { showToast('Select a customer first','err'); return; }
   var csv = 'Customer,Item,Quantity,Time,Date\n';
   var data = sheets[activeTab];
-  Object.keys(data).forEach(function (item) {
-    data[item].forEach(function (e) { csv += activeTab + ',' + item + ',' + e.qty + ',"' + e.time + '","' + e.date + '"\n'; });
+  Object.keys(data).forEach(function(item){
+    data[item].forEach(function(e){ csv += activeTab+','+item+','+e.qty+',"'+e.time+'","'+e.date+'"\n'; });
   });
-  dlFile(activeTab + '_orders.csv', csv, 'text/csv');
-  showToast('⬇ Exported @' + activeTab + "'s sheet", true);
+  dlFile(activeTab+'_orders.csv', csv, 'text/csv');
+  showToast('Exported @'+activeTab+"'s sheet", 'ok');
 }
-
 function exportAll() {
-  if (!Object.keys(sheets).length) { showToast('No data yet', false); return; }
+  if (!Object.keys(sheets).length) { showToast('No data yet','err'); return; }
   var csv = 'Customer,Item,Quantity,Time,Date\n';
-  Object.keys(sheets).forEach(function (name) {
-    Object.keys(sheets[name]).forEach(function (item) {
-      sheets[name][item].forEach(function (e) {
-        csv += name + ',' + item + ',' + e.qty + ',"' + e.time + '","' + e.date + '"\n';
-      });
+  Object.keys(sheets).forEach(function(name){
+    Object.keys(sheets[name]).forEach(function(item){
+      sheets[name][item].forEach(function(e){ csv += name+','+item+','+e.qty+',"'+e.time+'","'+e.date+'"\n'; });
     });
   });
-  dlFile('all_orders_' + new Date().toLocaleDateString('en-IN').replace(/\//g,'-') + '.csv', csv, 'text/csv');
-  showToast('📄 All sheets exported!', true);
+  dlFile('all_orders.csv', csv, 'text/csv');
+  showToast('All sheets exported!', 'ok');
 }
-
 function dlFile(name, content, type) {
   var a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([content], { type: type }));
-  a.download = name;
-  a.click();
+  a.href = URL.createObjectURL(new Blob([content],{type:type}));
+  a.download = name; a.click();
 }
-
 function printSummary() {
   var html = '<!DOCTYPE html><html><head><title>Order Summary</title>' +
-    '<style>body{font-family:sans-serif;padding:24px;color:#111}' +
-    'h1{font-size:1.4rem;margin-bottom:4px}' +
-    'h3{margin:20px 0 8px;color:#b45309;font-size:1rem}' +
-    'table{width:100%;border-collapse:collapse;margin-bottom:8px}' +
+    '<style>body{font-family:sans-serif;padding:24px}table{width:100%;border-collapse:collapse;margin-bottom:16px}' +
     'th,td{border:1px solid #ddd;padding:7px 10px;text-align:left;font-size:0.88rem}' +
-    'th{background:#fef3c7;font-weight:700}' +
-    '.total{font-weight:700;background:#fffbeb}' +
-    'p{color:#666;font-size:0.82rem;margin-top:4px}</style></head><body>' +
-    '<h1>🏗️ Builder Order Summary</h1><p>Printed: ' + new Date().toLocaleString('en-IN') + '</p>';
-  Object.keys(sheets).forEach(function (name) {
-    html += '<h3>Customer: @' + name + '</h3>' +
-      '<table><thead><tr><th>Item</th><th>Total Quantity</th></tr></thead><tbody>';
+    'th{background:#fef3c7}h3{margin:20px 0 8px;color:#b45309}.total{font-weight:700;background:#fffbeb}</style></head><body>' +
+    '<h2>🏗️ Builder Order Summary — '+new Date().toLocaleString('en-IN')+'</h2>';
+  Object.keys(sheets).forEach(function(name){
+    html += '<h3>@'+name+'</h3><table><thead><tr><th>Item</th><th>Total Qty</th></tr></thead><tbody>';
     var grand = 0;
-    Object.keys(sheets[name]).forEach(function (item) {
-      var total = sheets[name][item].reduce(function (s, e) { return s + e.qty; }, 0);
+    Object.keys(sheets[name]).forEach(function(item){
+      var total = sheets[name][item].reduce(function(s,e){return s+e.qty;},0);
       grand += total;
-      html += '<tr><td>' + item + '</td><td>' + total + '</td></tr>';
+      html += '<tr><td>'+item+'</td><td>'+total+'</td></tr>';
     });
-    html += '<tr class="total"><td>TOTAL</td><td>' + grand + '</td></tr>';
-    html += '</tbody></table>';
+    html += '<tr class="total"><td>TOTAL</td><td>'+grand+'</td></tr></tbody></table>';
   });
   html += '</body></html>';
-  var w = window.open('', '_blank');
-  w.document.write(html);
-  w.document.close();
-  setTimeout(function () { w.print(); }, 400);
+  var w = window.open('','_blank'); w.document.write(html); w.document.close();
+  setTimeout(function(){ w.print(); }, 400);
 }
-
 function clearLog() {
   if (!confirm("Clear today's log? Sheet data is kept.")) return;
-  log = [];
-  localStorage.setItem('bLog', JSON.stringify(log));
-  renderLog();
-  showToast('Log cleared', true);
+  log = []; localStorage.setItem('bLog', JSON.stringify(log));
+  renderLog(); showToast('Log cleared', 'ok');
 }
-
 function resetAll() {
   if (!confirm('RESET everything? All data will be deleted!')) return;
-  sheets = {}; log = [];
-  localStorage.removeItem('bSheets');
-  localStorage.removeItem('bLog');
-  activeTab = null;
-  renderLog();
-  renderTabs();
-  showToast('All data reset', true);
+  sheets={}; log={}; pending=[];
+  localStorage.removeItem('bSheets'); localStorage.removeItem('bLog'); localStorage.removeItem('bPending');
+  activeTab = null; renderLog(); renderTabs(); updateQueueBanner();
+  showToast('All data reset', 'ok');
 }
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  TOAST
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 var toastTimer;
-function showToast(msg, ok) {
+function showToast(msg, type) {
   var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + (ok ? 'ok' : 'err') + ' show';
+  t.textContent = msg; t.className = 'toast '+type+' show';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function () { t.className = 'toast'; }, 2600);
+  toastTimer = setTimeout(function(){ t.className='toast'; }, 2800);
 }
 
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  AUTO RETRY when online
+// ═══════════════════════════════════════════
+window.addEventListener('online', function() {
+  if (pending.length) {
+    showToast('Back online — syncing '+pending.length+' entries...', 'info');
+    retryAll();
+  }
+  setSyncStatus('idle', 'Google Sheets connected');
+});
+window.addEventListener('offline', function() {
+  setSyncStatus('error', 'Offline — saving locally');
+});
+
+// ═══════════════════════════════════════════
 //  INIT
-// ════════════════════════════════════════
+// ═══════════════════════════════════════════
 renderLog();
 renderTabs();
+updateQueueBanner();
 inp.focus();
 </script>
 </body>
