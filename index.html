@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Builder Order Entry</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#f59e0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Builder App">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -585,6 +590,21 @@ renderLog();
 renderTabs();
 updateQueueBanner();
 inp.focus();
+
+// ═══════════════════════════════════════════
+//  PWA — Register Service Worker
+// ═══════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(reg) {
+        console.log('SW registered');
+      })
+      .catch(function(err) {
+        console.log('SW failed:', err);
+      });
+  });
+}
 </script>
 </body>
 </html>
