@@ -380,20 +380,19 @@ function checkPin() {
 }
 
 function unlockApp() {
-  document.getElementById('pin-screen').style.display = 'none';
+  var ps = document.getElementById('pin-screen');
+  if (ps && ps.parentNode) ps.parentNode.removeChild(ps);
   document.getElementById('app').classList.add('unlocked');
   sessionStorage.setItem('unlocked', 'yes');
   pinLocked = false;
-  inp && inp.focus();
+  setTimeout(function(){ var i = document.getElementById('entry-input'); if(i) i.focus(); }, 300);
 }
 
 function lockApp() {
   sessionStorage.removeItem('unlocked');
   pinEntered = '';
-  updateDots();
-  document.getElementById('pin-screen').style.display = 'flex';
-  document.getElementById('app').classList.remove('unlocked');
-  pinLocked = true;
+  // Reload page to show PIN screen again
+  window.location.reload();
 }
 
 // Also support keyboard PIN entry
