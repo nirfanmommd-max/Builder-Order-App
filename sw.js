@@ -1,14 +1,10 @@
-var CACHE = 'builder-app-v1';
-var FILES = [
-  './',
-  './index.html',
-  'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap'
-];
+var CACHE = 'builder-app-v2';
+var FILES = ['./', './index.html'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE).then(function(cache) {
-      return cache.addAll(FILES.filter(function(f){ return !f.startsWith('https://fonts'); }));
+      return cache.addAll(FILES);
     })
   );
   self.skipWaiting();
@@ -17,19 +13,16 @@ self.addEventListener('install', function(e) {
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
-      return Promise.all(keys.filter(function(k){ return k !== CACHE; }).map(function(k){ return caches.delete(k); }));
+      return Promise.all(
+        keys.filter(function(k){ return k !== CACHE; })
+            .map(function(k){ return caches.delete(k); })
+      );
     })
   );
   self.clients.claim();
 });
 
 self.addEventListener('fetch', function(e) {
-  // For Google Sheets API calls — always go to network
-  if (e.request.url.includes('script.google.com')) {
-    e.respondWith(fetch(e.request).catch(function(){ return new Response(JSON.stringify({status:'offline'}), {headers:{'Content-Type':'application/json'}}); }));
-    return;
-  }
-  // For everything else — cache first, then network
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       if (cached) return cached;
