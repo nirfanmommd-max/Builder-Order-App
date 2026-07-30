@@ -3,12 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Padippura Builders</title>
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#f59e0b">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Padippura Builders">
+<title>OrderFlow — Padippura Builders</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -127,7 +122,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--te
 <div class="topbar">
   <div class="logo-wrap">
     <div class="logo-main">🏗️ <span>Padippura</span> Builders</div>
-    <div class="logo-sub">&amp; Developers — Order Entry</div>
+    <div class="logo-sub">Powered by OrderFlow</div>
   </div>
   <span id="clock"></span>
 </div>
@@ -398,7 +393,12 @@ function dlFile(name,content,type){ var a=document.createElement('a'); a.href=UR
 var tt;
 function showToast(msg,type){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+type+' show'; clearTimeout(tt); tt=setTimeout(function(){t.className='toast';},2600); }
 
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js').catch(function(){}); }
+// PWA removed — unpublishing GitHub repo instantly kills access
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){ r.unregister(); });
+  });
+}
 
 renderQuickList();
 inp.focus();
