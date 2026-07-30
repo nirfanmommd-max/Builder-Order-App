@@ -1,4 +1,4 @@
-var CACHE = 'builder-app-v5';
+var CACHE = 'builder-app-v6';
 var FILES = ['./', './index.html'];
 
 self.addEventListener('install', function(e) {
